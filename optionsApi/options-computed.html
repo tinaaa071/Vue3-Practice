@@ -17,11 +17,14 @@
   <ul>
     <li v-for="item in carts">{{ item.name }}</li>
   </ul>
-  total 的值：<br>
+  <!-- 使用 Computed 運算出 total -->
+  total 的值：{{ total }}<br>
 
   <h3>Computed 常見技巧 - 搜尋</h3>
+  <!-- 使用 v-model 綁定 search -->
   <input type="search" v-model="search">
   <ul>
+    <!-- filterProducts 將字串與 products 內之品項進行比對，名稱相符時就調用出來 -->
     <li v-for="item in filterProducts">
       {{ item.name }} / {{ item.price }}
     </li>
@@ -29,6 +32,7 @@
 
   <h3>Computed Getter, Setter</h3>
   sum 的值：
+  <!-- input 產生新的值 -->
   <input type="number" v-model.number="num">
   <button type="button" @click="total = num">更新</button>
   total 的值：{{ total }}<br>
@@ -65,6 +69,39 @@ const App = {
       ],
       carts: [],
       sum: 0,
+    }
+  },
+  // 定義 computed 物件
+  computed: {
+    // 改成物件格式
+    total: {
+      // get 函式
+      get() {
+        let total = 0;
+        // 當 this.carts 有更動時就會觸發 computed
+        this.carts.forEach( item => {
+          total += item.price;
+        })
+        // 假設有人定義一個金額，如果沒有就使用加入購物車的品項項目來進行金額結算
+        return this.sum || total;
+      },
+      // set 函式
+      // 會帶上參數
+      set(val) {
+        // 產生值
+        console.log(val);
+        // 寫入值到 sum
+        this.sum = val
+      }
+    },
+    filterProducts() {
+      // 將符合 search 之結果一一取出
+      return this.products.filter(item => {
+        // name 為產品品項內容
+        // 使用 match 當產品字串符合時，將資料給調用
+        return item.name.match(this.search)
+        // console.log(item);
+      })
     }
   },
   methods: {

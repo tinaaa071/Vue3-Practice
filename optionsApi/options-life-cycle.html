@@ -11,7 +11,12 @@
     <span v-else>顯示元件</span>
   </button>
   <hr>
-  <child v-if="isShowing"></child>
+  
+  <!-- keep-alive 在元件重新啟用時不會被重置，可放於最外層 -->
+  <keep-alive>
+    <child v-if="isShowing"></child>
+  </keep-alive>
+ 
 
   <p>講解事項：</p>
   <ul>
@@ -31,10 +36,12 @@
 </script>
 
 <script>
+// 子元件
 const child = {
   template: '#childarea',
   data: function () {
     return {
+      // 檢視資料狀態是否已準備好或是否有被變更
       text: 'Vue data 資料狀態'
     }
   },
@@ -67,9 +74,11 @@ const child = {
     console.log(`unmounted! ${this.text}`);
   }
 };
+// 主元件
 const App = {
   data() {
     return {
+      // 透過 isShowing 變數切換子元件顯示狀態
       isShowing: false
     }
   }

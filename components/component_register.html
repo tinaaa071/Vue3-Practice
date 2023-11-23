@@ -12,6 +12,8 @@
     <li>元件結構與最外層的根元件結構無異（除了增加 Template 的片段）</li>
     <li>元件另有 prop, emits 等資料傳遞及事件傳遞</li>
   </ul>
+  <!-- 將元件名稱用標籤形式定義 -->
+  <alert></alert>
 
   <h3>不同元件的註冊方式</h3>
 
@@ -39,16 +41,33 @@
       };
     },
   })
-  //   .component('alert', {
-  //   data() {
-  //     return {
-  //       text: '內部文字'
-  //     };
-  //   },
-  //   template: `<div class="alert alert-primary" role="alert">
-  //     {{ text }}
-  //   </div>`
-  // });
+    // 於此處「註冊元件」
+    .component('alert', {
+    data() {
+      return {
+        text: '內部文字'
+      };
+    },
+    // 元件樣板之寫法，使用 `` 包住 html
+    template: `<div class="alert alert-primary" role="alert">
+      {{ text }}
+    </div>`
+  });
+
+  // 於進入 mount 階段之前，可直接加入其他元件
+  // ('元件名稱')
+  // 每個元件名稱為獨立，勿重複使用
+  app.component('alert2', {
+    data() {
+      return {
+        text: '元件2'
+      };
+    },
+    // 元件樣板之寫法，使用 `` 包住 html
+    template: `<div class="alert alert-primary" role="alert">
+      {{ text }}
+    </div>`
+  })
 
   app.mount('#app');
 </script>

@@ -12,22 +12,29 @@
   </ul>
 
   <h3>methods 的觸發方法（點擊、其它 options api、生命週期...）</h3>
+  <!-- 使用 click 指令觸發 trigger 函式 -->
   <button type="button" @click="trigger('Click Methods')">點擊觸發</button>
 
+  <!-- 使用 @click="callOtherMethod" 呼叫 callOtherMethod -->
   <button type="button" @click="callOtherMethod">呼叫另一個 methods</button>
 
   <h3>參數傳入</h3>
-  <button type="button" @click="methodParameter()">參數傳入</button>
+  <!-- 調用函式時，可在 () 內傳入參數 -->
+  <!-- 將 DOM 事件傳入時可使用 $event 參數 -->
+  <button type="button" @click="methodParameter(1, 2, 3, $event)">參數傳入</button>
 
   <h3>使用 methods 處理複雜資料</h3>
+  <!-- 產品內容 -->
   <ul>
+    <!-- 使用 v-for 將 products 取出內之產品一一取出 -->
     <li v-for="product in products">
       {{ product.name }} / {{ product.price }}
-      <button type="button">加入購物車</button>
+      <button type="button" @click="addToCart(product)">加入購物車</button>
     </li>
   </ul>
   ...
   <h6>購物車項目</h6>
+  <!-- 購物車內容 -->
   <ul>
     <li v-for="item in carts">{{ item.name }}</li>
   </ul>
@@ -35,7 +42,14 @@
 
 
   <h3>作為 $filter 使用（取代複雜表達式）</h3>
+  <!-- 在總金額前面加上 NT 符號 -->
+  <!-- 使用樣板字面值傳入變數 -->
+  <!-- {{ `NT$ ${sum}` }} -->
 
+  <!-- 若反覆出現或需經過複雜運算，可從 methods 封裝 -->
+  <!-- 修改後：直接調用函式並傳入參數 -->
+  <!-- 優點：可不斷重複利用 -->
+  {{ convertToAmount(sum) }}
 </div>
 
 <script>
@@ -69,31 +83,50 @@ const App = {
       sum: 0,
     }
   },
+  // methods 本身為一個物件
   methods: {
     trigger(name) {
       console.log(name, '此事件被觸發了')
     },
+    // 使用此函式觸發上一個 trigger 函式
     callOtherMethod() {
+      this.trigger('callOtherMethod')
       // this.trigger('由 callOtherMethod 觸發')
     },
     methodParameter(a, b, c, d) {
       console.log(a, b, c, d)
     },
-    // addToCart(product) {
-    //   this.carts.push(product)
-    // },
-    // calculate() {
-    //   let total = 0;
-    //   this.carts.forEach(item => {
-    //     total += item.price;
-    //   });
-    //   this.sum = total;
-    // },
-    // convertToAmount(price) {
-    //   return `NT$ ${price}`;
-    // }
+    addToCart(product) {
+      // 查看是否有正確加入
+      console.log(product);
+      // 使用 push 將產品加入購物車
+      this.carts.push(product);
+      // 呼叫 calculate 方法
+      // 設定「當有商品加入購物車時」觸發
+      this.calculate();
+    },
+    // 將加入購物車之結果運算出來
+    calculate() {
+      console.log('calculate');
+      // 計算金額
+      // 1. 放入空值
+      let total = 0;
+      // 2. 將購物車內容取出
+      this.carts.forEach(item => {
+        total += item.price;
+      });
+      // 檢視
+      console.log(total);
+      // 3. 存回 sum
+      this.sum = total;
+    },
+    convertToAmount(price) {
+      // 加上格式後將金額傳出
+      return `NT$ ${price}`;
+    }
   },
   created() {
+    this.trigger('由生命週期觸發')
     // this.trigger('由生命週期觸發');
   }
 };
