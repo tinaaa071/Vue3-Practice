@@ -7,21 +7,24 @@
   <h3>Props 靜態資料</h3>
   <p>由外部傳入資料至內部</p>
   外部資源：https://images.unsplash.com/photo-1605784401368-5af1d9d6c4dc?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80
-  <photo></photo>
+  <photo url="https://images.unsplash.com/photo-1605784401368-5af1d9d6c4dc?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80"></photo>
 
   <h3>動態資源</h3>
   <p>技巧：前內、後外</p>
-  <photo></photo>
+  <!-- 使用動態屬性 v-bind:內層定義之props屬性名稱="變數" 綁定 -->
+  <photo v-bind:url="imgUrl"></photo>
 
   <h3>單向數據流</h3>
+  <!-- 加入 input 調整 url 之值 -->
   <photo2 :url="imgUrl"></photo2>
 
   <h3>命名限制</h3>
-  <photo3></photo3>
+  <photo3 :super-Url="imgUrl"></photo3>
 </div>
 
 <script type="module">
   // 區域註冊
+  // 外層
   const app = Vue.createApp({
     data() {
       return {
@@ -30,7 +33,13 @@
     },
   });
 
+  // 內層
   app.component('photo', {
+    // 使用 props 會定義 props 屬性
+    // props 以陣列做呈現
+    // ['要使用之變數名稱']
+    props: ['url'],
+    // 由外層傳入 url 變數
     template: `<img :src="url" class="img-thumbnail" alt>`
   });
 
@@ -41,6 +50,7 @@
   })
 
   app.component('photo3', {
+    // 使用小駝峰命名
     props: ['superUrl'],
     template: `<img :src="superUrl" class="img-thumbnail" alt>`
   })

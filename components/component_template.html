@@ -1,4 +1,11 @@
 <!DOCTYPE html><html><head><title>元件樣板及綁定方式</title><meta name="viewport" content="width=device-width, initial-scale=1"><link href="images/favicon.ico" rel="shortcut icon"><meta charset="UTF-8"><script src="/javascripts/vendor.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.37/vue.global.js"></script></head><body class="bg-lighter">
+<!-- 新建一個 <script> -->
+<script type="text/x-template" id="alert-template">
+  <!-- html 片段 -->
+  <div class="alert alert-primary" role="alert">
+    x-template 所建立的元件
+  </div>
+</script>
 <div class="container main my-5"><div class="row"><main class="col post">
 <!-- 章節標題 --><div class="mb-4"><h1 class="mt-0 text-muted">元件樣板及綁定方式</h1><small>檔名：<code>component_template.html</code></small></div>
 <!-- 🔥🔥練習開始🔥🔥 -->
@@ -6,8 +13,11 @@
   <h3>樣板建立方式</h3>
 
   <h4>template</h4>
+  <!-- 使用元件名稱作為標籤名稱 -->
+  <alert></alert>
 
   <h4>x-template</h4>
+  <alert2></alert2>
 
   <h4>單文件元件（單一檔案包含 HTML, JS, CSS）</h4>
   <p>本章節不介紹，在 Vue Cli 課程中將會實作（較為簡單，使用與 x-template 接近）</p>
@@ -15,22 +25,22 @@
   <hr>
   <h3>元件運用</h3>
   <h4>直接使用 標籤 名稱</h4>
-<!--  <alert></alert>-->
+ <alert></alert>
 
   <h4>搭配 v-for 也是沒問題的</h4>
-<!--  <alert v-for="i in array" :key="i"></alert>-->
+ <alert v-for="i in array" :key="i"></alert>
 
   <h4>使用 v-is 綁定</h4>
-<!--  <div v-is="'alert'"></div>-->
+ <div v-is="'alert'"></div>
 
   <h4>動態屬性</h4>
-<!--  <input type="text" v-model="componentName">-->
+ <input type="text" v-model="componentName">
 
   <p>任何標籤均可搭配 v-is 進行動態切換</p>
-<!--  <div v-is="componentName"></div>-->
+ <div v-is="componentName"></div>
 
   <p>在 <code>component</code> 標籤中，可以使用 is 縮寫（由 v2 版轉移過來的功能）</p>
-<!--  <component v-bind:is="componentName"></component>-->
+ <component v-bind:is="componentName"></component>
 
   <h2>動態標籤實戰技巧</h2>
   <table>
@@ -41,8 +51,11 @@
       </tr>
     </thead>
     <tbody>
-      <table-row></table-row>
-      <!-- <tr v-is="'table-row'"></tr>-->
+      <!-- 加入 table-row 元件，會顯示於 table 之外層，因不符合 html 結構，渲染時會被移至外層 -->
+      <!-- <table-row></table-row> -->
+
+      <!-- 此情況下需使用 <tr> 標籤，並使用 v-is 綁定元件 -->
+      <tr v-is="'table-row'"></tr>
     </tbody>
   </table>
 </div>
@@ -59,9 +72,15 @@
   })
 
   app.component('alert', {
+    // 使用反斜線 `html 片段`
     template: `<div class="alert alert-primary" role="alert">
       範例ㄧ
     </div>`,
+  });
+
+  app.component('alert2', {
+    // 使用單引號 '#id'
+    template: '#alert-template',
   });
 
 

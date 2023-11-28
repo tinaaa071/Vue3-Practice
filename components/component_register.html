@@ -21,18 +21,38 @@
     全域註冊
   </h4>
   <p>此 createApp 下，任何子元件都可運用，在中小型專案、一般頁面開發很方便</p>
+  <alert2></alert2>
 
 
   <h4>區域註冊</h4>
   <p>限制在特定元件下才可使用，在 Vue Cli 中很常使用此方法（便於管理）</p>
+  <alert3></alert3>
 
 
   <h4>模組化</h4>
   <p>同屬於區域註冊，Vue Cli 中的實戰運用技巧</p>
+  <alert4></alert4>
 
 </div>
 
 <script type="module">
+  // 區域註冊
+  // 於程式碼前宣告一個新物件
+  const alert3 = {
+    data() {
+      return {
+        text: '元件3'
+      };
+    },
+    // 元件樣板之寫法，使用 `` 包住 html
+    template: `<div class="alert alert-primary" role="alert">
+      {{ text }}
+    </div>`
+  }
+
+  // 匯入外部模組化之元件
+  import alert4 from './alert-component.js'
+  
   // 注意，這段起手式與先前不同
   const app = Vue.createApp({
     data() {
@@ -40,8 +60,21 @@
         text: '外部元件文字',
       };
     },
+    // 「區域註冊」需決定此元件需掛載在哪一個根元件或子元件之下
+    // 此處是將元件加入在 app 根元件內
+    // components: {
+    //   // 加入剛剛定義之物件
+    //   alert3
+    // }
+
+    // 加入 alert4 模組化元件
+    // 可加入任一元件內，和區域註冊相同
+    components: {
+      alert4
+    }
   })
     // 於此處「註冊元件」
+    // 元件需指定名稱，此處為'alert'
     .component('alert', {
     data() {
       return {
@@ -55,7 +88,7 @@
   });
 
   // 於進入 mount 階段之前，可直接加入其他元件
-  // ('元件名稱')
+  // 使用 app.component('元件名稱', {}) 加入
   // 每個元件名稱為獨立，勿重複使用
   app.component('alert2', {
     data() {
@@ -63,9 +96,15 @@
         text: '元件2'
       };
     },
+    // 將 alert3 區域註冊於 alert2 子元件下
+    components: {
+      alert3
+    },
     // 元件樣板之寫法，使用 `` 包住 html
+    // 於此處加入 <alert3> 才能使用
     template: `<div class="alert alert-primary" role="alert">
       {{ text }}
+      <alert3></alert3>
     </div>`
   })
 
