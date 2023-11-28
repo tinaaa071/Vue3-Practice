@@ -10,10 +10,11 @@
   <!-- 直接將值傳入，以字串形式呈現 -->
   <props-type money="300"></props-type>
 
-  <!-- 改為 v-bind 形式，如同 js 表達是，可輸入任何變數或原始型別 -->
+  <!-- 改為 v-bind 形式，如同 js 表達式，可輸入任何變數或原始型別 -->
   <props-type :money="true"></props-type>
-  
-  <!-- 使用 v-bind 將外部變數傳入 -->
+
+  <!-- 使用 v-bind 將外部變數傳入，內部變數會呈現同樣型別 -->
+  <!-- 傳入外部之 money -->
   <props-type :money="money"></props-type>
 
 
@@ -23,6 +24,7 @@
     <li>型別驗證</li>
     <li>預設值、是否必填</li>
   </ul>
+  <!-- props 驗證針對開發過程給玉適當提示，不會影響運作 -->
   <props-validation
   :prop-a="fun"
   prop-c="required"
@@ -33,6 +35,7 @@
 
 <script type="module">
   // 區域註冊
+  // 外部
   const app = Vue.createApp({
     data() {
       return {
@@ -44,13 +47,16 @@
     },
   });
 
+  // 內部
   // 元件 props-type
-  // 用以呈現外部傳入之值 value，及外部傳入值之型別 typeof
+  // 用以呈現「外部」傳入之值 value，及「外部」傳入值之型別 typeof
   app.component('props-type', {
     props: ['money'],
     template: `<div>value: {{money}}, typeof:{{ typeof money }}</div>`
   });
 
+  // 將 props 改為「型別驗證」形式，即為「物件 {}」形式
+  // 「物件屬性名稱」即為「props 名稱」
   app.component('props-validation', {
     props: {
       // 單一型別檢查，可接受的型別 String, Number, Object, Boolean, Function(在 Vue 中可使用 Function 驗證型別)
@@ -58,15 +64,19 @@
       propA: Function,
 
       // 多個型別檢查
+      // 將 props 值改為陣列 []
       propB: [String, Number],
 
-      // 必要值
+      // 條件式
+      // 驗證是否為「必要值」
+      // 使用物件形式加入
       propC: {
         type: String,
         required: true,
       },
 
-      // 預設值
+      // 驗證是否包含「預設值」，當外部沒有傳入值時，使用預設值
+      // 使用物件形式加入
       propD: {
         type: Number,
         default: 300
