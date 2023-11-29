@@ -14,6 +14,7 @@
 </div>
 
 <script type="module">
+  // 外層
   const app = Vue.createApp({
     data() {
       return {
@@ -27,20 +28,35 @@
     }
   });
 
+  // 內層
   app.component('button-counter', {
     data() {
       return {
         num: 1,
       }
     },
+    // 加入 emits，加入 add 事件
+    emits:['add'],
+
     // 主要會出現在該值是由 data 定義，但難以追蹤他的變化時會出現
     template: `
-      <!-- <button type="button" @click="num++">調整 num 的值</button> --> 
-      <button type="button">add</button>`,
+      <button type="button" @click="num++">調整 num 的值</button> 
+      <button type="button" @click="$emit('add', num)">add</button>`,
   });
 
   app.component('button-counter2', {
-    emits: {},
+    emits: {
+      // add 之值要向外傳遞，所以要驗證此值是否符合預期
+      // 預計傳出之值為 num
+      add: (num) => {
+        // 若回傳結果之型別非「數字」，則顯示提示
+        if(typeof num !== 'number' ) {
+          console.warn('add 事件參數型別需為 number')
+        } 
+        // 回傳結果，結果為 true 不顯示警告，為 false 顯示警告
+        return typeof num === 'number';
+      }
+    },
     template: `
       <button type="button" @click="$emit('add', '1')">Emit 驗證是否為數值</button>
     `,
