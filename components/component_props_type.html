@@ -68,14 +68,15 @@
       propB: [String, Number],
 
       // 條件式
-      // 驗證是否為「必要值」
+      // 驗證是否為「必要值」，使用 required
       // 使用物件形式加入
       propC: {
         type: String,
         required: true,
       },
 
-      // 驗證是否包含「預設值」，當外部沒有傳入值時，使用預設值
+      // 驗證是否包含「預設值」，使用 default
+      // 當外部沒有傳入值時，使用預設值
       // 使用物件形式加入
       propD: {
         type: Number,

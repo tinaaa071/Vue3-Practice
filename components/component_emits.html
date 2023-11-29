@@ -4,26 +4,32 @@
 <!-- 🔥🔥練習開始🔥🔥 -->
 
 <div id="app">
-  <h3>Emit 處發外部事件</h3>
+  <h3>Emit 觸發外部事件</h3>
   <ul>
     <li>先定義外層接收的方法</li>
     <li>定義內層的 $emit 觸發方法</li>
     <li>使用 v-on 的方式觸發外層方法（口訣：前內、後外）</li>
   </ul>
   {{ num }}
+  <!-- 使用 v-on 的方式觸發外層方法 -->
+  <!-- v-on:內部往外觸發事件的名稱="外層接收方法" -->
   <button-counter
-
+  v-on:emit-num="addNum"
   ></button-counter>
 
   <h3>傳遞資料狀態</h3>
+  <!-- {{ text }} 為外層資料 -->
   內部傳來的文字：{{ text }}<br>
-  <button-text
 
+  <!-- 內層元件 -->
+  <button-text
+    @emit-text="getData"
   ></button-text>
 
   <h3>命名注意</h3>
   <p>駝峰的大寫文字，可以改為 `-` 進行串接</p>
   內部傳來的文字：{{ text }}<br>
+  <!-- 內層元件 -->
   <button-named
     @emit-text="getData"
   ></button-named>
@@ -31,6 +37,7 @@
 
 <script type="module">
   // 區域註冊
+  // 外層
   const app = Vue.createApp({
     data() {
       return {
@@ -38,34 +45,56 @@
         text: ''
       };
     },
+    // 外層接收方法
     methods: {
-      // addNum() {
-      //   console.log('addNum');
-      //   this.num++
-      // },
-      // getData(text) {
-      //   console.log('getData', text);
-      //   this.text = text;
-      // }
+      // 新增函式，掛載於 methods 之下
+      addNum() {
+        // 因是使用 emit 觸發，可加上 console.log 確認
+        console.log('addNum');
+        // 預期觸發之事件
+        this.num++;
+      },
+      getData(text) {
+        console.log('getData');
+        this.text = text;
+      }
     }
   });
 
+  // 內層
   app.component('button-counter', {
+    // 內層的 $emit 觸發方法，觸發外層事件
     methods: {
-
+      click() {
+        // ('自訂字串名稱')
+        this.$emit('emit-num')
+        // 確認是否有觸發
+        console.log('click');
+      }
     },
-    template: `<button type="button">add</button>`
+    // 點擊按鈕觸發方法
+    // 加入 @click=""
+    template: `<button type="button" @click="click">add</button>`
   });
 
   app.component('button-text', {
     data() {
       return {
+        // 將資料往外傳
         text: '內部資料',
       }
     },
     methods: {
+      // 自定義名稱
+      // 觸發外層事件
+      emit() {
+        // ('自訂字串名稱', 要傳遞的參數)
+        this.$emit('emit-text', this.text)
+        // 確認是否有觸發
+        console.log('emit');
+      }
     },
-    template: `<button type="button">emit data</button>`
+    template: `<button type="button" @click="emit">emit data</button>`
   });
 
   app.component('button-named', {
