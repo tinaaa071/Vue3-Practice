@@ -8,15 +8,21 @@
   <p>套件路徑：<a href="https://github.com/developit/mitt">https://github.com/developit/mitt</a></p>
   <card-on></card-on>
 
+  <!-- 將 card-emit 之資料送往 card-on -->
   <card-emit></card-emit>
 </div>
 
 <script type="module">
-  import 'https://unpkg.com/mitt/dist/mitt.umd.js'; // mitt
+  // 載入 mitt 套件
+  import 'https://unpkg.com/mitt/dist/mitt.umd.js';
+  // 啟用套件
+  const emitter = mitt();
 
   const app = Vue.createApp({});
 
+  // 元件一：card-emit
   app.component('card-emit', {
+    // 將 data 送往 card-on
     data() {
       return {
         product: {
@@ -28,7 +34,12 @@
     },
     methods: {
       sendData() {
-
+        // 檢查是否有觸發
+        console.log('sendData');
+        // 傳送
+        // 使用 emitter 將資料往另一個元件發送
+        // emitter.emit('自定義事件名稱', 要傳送的參數)
+        emitter.emit('sendProduct', this.product)
       }
     },
     template: `<div class="card" style="width: 18rem;">
@@ -38,14 +49,24 @@
     </div>`
   });
 
+  // 元件二：card-on
   app.component('card-on', {
     data() {
       return {
+        // 預期將資料呈現在 {{ item }} 畫面上
         item: {}
       }
     },
     created() {
-
+      // 接收
+      // 在生命週期階段加入「監聽」
+      // sendProduct 觸發後會觸發另一事件
+      emitter.on('sendProduct', (data) => {
+        // 檢查 card-on 是否有接收到 card-emit 之消息
+        console.log('card-on', data);
+        // card-on 之 item = card-emit 之 data
+        this.item = data;
+      })
     },
     template: `<div class="card" style="width: 18rem;">
       <div class="card-body">
