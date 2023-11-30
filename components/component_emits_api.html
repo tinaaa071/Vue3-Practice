@@ -5,10 +5,13 @@
 
 <div id="app">
   <h3>Emits API</h3>
+  <!-- 外層 -->
   {{ num }}
+  <!-- 內層 -->
   <button-counter @add="addNum"></button-counter>
 
   <h3>驗證資料內容</h3>
+  <!-- 內層 -->
   <button-counter2 @add="addNum"></button-counter2>
 
 </div>
