@@ -10,26 +10,31 @@
     <li>內層元件補上 inject</li>
   </ul>
   <card></card>
-
+  {{ user.name }}
   <h3>注意事項：響應式</h3>
 
 </div>
 
 <script>
+// 最內層元件
 const userComponent = {
   template: `<div>
     userComponent 元件：<br />
     {{ user.name }}, <br />
     {{ user.uuid }}
   </div>`,
+  inject: ['user'],
   created() {
+    // 在生命週期加入，user 就可直接取得最外層 provide 所傳入之內容
     console.log(this.user);
 
     // 如果根元件沒有使用 function return 則不能使用響應式
-    // this.user.name = '杰倫'
+    // 僅能調整「當前這一層」的內容
+    this.user.name = '杰倫'
   }
 }
 
+// 外層元件
 const app = Vue.createApp({
   data() {
     return {
@@ -39,8 +44,16 @@ const app = Vue.createApp({
       }
     }
   },
+  // 將 provide 調整成函式結構
+  provide() {
+    return {
+      // 使用 this.user 取得原本的資料
+      user: this.user
+    }
+  }
 })
 
+  // 內層卡片元件
   app.component('card', {
     data() {
       return {
@@ -52,10 +65,13 @@ const app = Vue.createApp({
     components: {
       userComponent
     },
+    // 內層也需加入 inject 才可取得相同資訊
+    inject: ['user'],
     template: `
       <div class="card" style="width: 18rem;">
         <div className="card-header">card 元件</div>
         <div class="card-body">
+          {{ user.name }}
           <userComponent></userComponent>
         </div>
       </div>
