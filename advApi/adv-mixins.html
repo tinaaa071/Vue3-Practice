@@ -41,9 +41,15 @@ const mixComponent2 = {
 const app = Vue.createApp({});
 
 app.component('card', {
+  data() {
+    return {
+      name: 'card'
+    }
+  },
   template: `<div class="card">
     <div class="card-body">{{ name }}</div>
   </div>`,
+  mixins: [mixComponent1, mixComponent2],
   created() {
     console.log('card 的元件生命週期')
   }

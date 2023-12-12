@@ -20,18 +20,21 @@
   </ul>
 
   <h3>範例：載入 VeeValidate 驗證套件</h3>
-  <form @submit="onSubmit">
+  <!-- 加入 v-slot，將資源向外匯出給外部使用 -->
+  <v-form @submit="onSubmit" v-slot="{ errors }">
+    {{ errors }}
 
-
-    <input name="name" type="text" placeholder="Who are you">
-    <span>請填寫此欄位</span>
+    <v-field name="欄位名稱" type="text" placeholder="Who are you" :rules="isRequired">
+    </v-field>
+    <error-message name="欄位名稱"></error-message>
 
     <button>Submit</button>
-  </form>
+  </v-form>
 
   <p>比對與 ESM 版本上的差異</p>
 
 </div>
+<!--  以 CDN 載入套件 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vee-validate/4.1.17/vee-validate.min.js"></script>
 <script type="module">
   console.log(VeeValidate);
@@ -39,13 +42,22 @@
   const app = Vue.createApp({
     components: {
       // Components were renamed to avoid conflicts of HTML form element without a vue compiler
-      // VForm: VeeValidate.Form,
-      // VField: VeeValidate.Field,
-      // ErrorMessage: VeeValidate.ErrorMessage,
+
+      // 加入大寫 V 避免和原生 html 搞混
+      VForm: VeeValidate.Form,
+      VField: VeeValidate.Field,
+      ErrorMessage: VeeValidate.ErrorMessage,
     },
     methods: {
-      onSubmit() {
-        console.log()
+      onSubmit(value) {
+        console.log(value)
+      },
+      isRequired(value) {
+        // 驗證是否有填寫值 value
+        if(!value) {
+          return '此欄是必填的'
+        }
+        return true;
       }
     },
   });
