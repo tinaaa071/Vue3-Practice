@@ -20,9 +20,9 @@
 
     <div class="mb-3">
       <label for="name" class="form-label">姓名</label>
-      <input id="name" name="姓名" type="text" class="form-control"
-               placeholder="請輸入姓名">
-      <span class="invalid-feedback"></span>
+      <v-field id="name" name="姓名" type="text" class="form-control" placeholder="請輸入姓名" rules="required" :class="{ 'is-invalid': errors['姓名'] }">
+      </v-field>
+      <error-message name="姓名" class="invalid-feedback"></error-message>
     </div>
 
     <div class="mb-3">
@@ -34,19 +34,24 @@
 
     <div class="mb-3">
       <label for="region" class="form-label">地區</label>
-      <select id="region" name="地區" class="form-control">
+      <v-field id="region" name="地區" class="form-control" 
+      :class="{ 'is-invalid': errors['地區'] }"
+      placeholder="請輸入地區"
+      rules="required"
+      v-model="user.region"
+      as="select">
         <option value="">請選擇地區</option>
         <option value="台北市">台北市</option>
         <option value="高雄市">高雄市</option>
-      </select>
-      <span class="invalid-feedback"></span>
+      </v-field>
+      <error-message name="地區" class="invalid-feedback"></error-message>
     </div>
 
     <div class="mb-3">
       <label for="address" class="form-label">地址</label>
-      <input id="address" name="地址" type="text" class="form-control"
-               placeholder="請輸入地址">
-      <span class="invalid-feedback"></span>
+      <v-field id="address" name="地址" type="text" class="form-control" placeholder="請輸入地址" rules="required" :class="{ 'is-invalid': errors['地址'] }">
+      </v-field>
+      <error-message name="地址" class="invalid-feedback"></error-message>
     </div>
 
     <button class="btn btn-primary" type="submit">Submit</button>
@@ -61,8 +66,11 @@
 <script src="https://cdn.jsdelivr.net/npm/@vee-validate/rules@4.1.17/dist/vee-validate-rules.min.js"></script>
 <script type="module">
 // 加入規則
-VeeValidate.defineRule('email', VeeValidateRules['email']);
-VeeValidate.defineRule('required', VeeValidateRules['required']);
+Object.keys(VeeValidateRules).forEach(rule => {
+  if (rule !== 'default') {
+    VeeValidate.defineRule(rule, VeeValidateRules[rule]);
+  }
+});
 
 // 讀取外部的資源 VeeValidateI18n 套件
 VeeValidateI18n.loadLocaleFromURL('./zh_TW.json');
