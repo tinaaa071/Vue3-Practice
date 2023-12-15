@@ -12,7 +12,7 @@
     {{ errors }}
     <div class="mb-3">
       <label for="email" class="form-label">Email</label>
-      <v-field id="email" name="email" type="email" class="form-control" placeholder="請輸入 Email" rules="email|required" :class="{ 'is-invalid': errors['email'] }" v-model="user.email">
+      <v-field id="email" name="email" type="email" class="form-control" placeholder="請輸入 Email" rules="required" :class="{ 'is-invalid': errors['email'] }" v-model="user.email">
       </v-field>
       <!-- error-message 需對應到 v-field 的 name 欄位 -->
       <error-message name="email" class="invalid-feedback"></error-message>
