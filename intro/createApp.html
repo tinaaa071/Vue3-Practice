@@ -15,6 +15,9 @@ Vue.createApp({
       counter: 0,
       text: '這是一段話',
     }
+  },
+  created () {
+    console.log(this);
   }
 }).mount('#app')
 

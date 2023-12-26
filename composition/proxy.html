@@ -8,17 +8,44 @@
   <li>Proxy 的運作</li>
 </ul>
 <script type="module">
-// #1 Proxy 結構
-// // 控制器，關鍵知識點：監聽
-// const handler = {
-//   get(obj, prop, value) {
-//     console.log('get:', obj, prop, value);
-//   },
-//   set(obj, prop, newVal) {
-//     console.log('set:', obj, prop, newVal);
-//   }
-// };
+// 實際範例：將資料渲染到畫面上
+const render = (prop, data) => {
+  const target = document.querySelector('#app');
+  target.innerHTML = `${prop}: ${data}`
+}
+// 渲染
+render('name', '帶入的名字')
 
+// #1 Proxy 結構
+// 控制器，關鍵知識點：監聽
+const handler = {
+  get(obj, prop, value) {
+    console.log('get:', obj, prop, value);
+    return obj[prop];
+  },
+  set(obj, prop, newVal) {
+    console.log('set:', obj, prop, newVal);
+    // prop 為 a 屬性
+    // newVal 後來傳入之值
+    obj[prop] = newVal;
+    // 呼叫 render
+    render(prop, obj[prop])
+    return true;
+  }
+};
+
+// 將 Proxy 物件實體化
+// Proxy({物件}, 控制器)，前面一定是「物件」、後面是「控制器」
+// handler 控制器，會監控「物件」內值的變化
+const newObj = new Proxy({ a:1 }, handler);
+newObj.a = 2;
+
+console.log(newObj.a);
+
+// 過 2 秒後渲染
+setTimeout(() =>{
+  newObj.name = '卡斯柏'
+}, 2000)
 
 </script>
 <!-- 🙇🙇練習結束🙇🙇 -->
