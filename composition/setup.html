@@ -8,17 +8,39 @@
 </div>
 <script type="module">
 
+// 傳統方法
+// import { createApp } from 'vue';
+// 解構方法
+const { createApp, ref } = Vue
+
 const app = Vue.createApp({
-  data() {
+  // data() {
+  //   return {
+  //     num: 1,
+  //   }
+  // },
+  // methods: {
+  //   // 累加
+  //   add() {
+  //     this.num++;
+  //   }
+  // },
+
+  // 使用 Composition API
+  setup() {
+    const num = ref(1)
+
+    // 沒有 this
+    function add() {
+      num.value++
+    }
+
+    // 資料、方法 都需要 return
     return {
-      num: 1,
+      num,
+      add
     }
-  },
-  methods: {
-    add() {
-      this.num++;
-    }
-  },
+  }
 });
 
 app.mount('#app');
