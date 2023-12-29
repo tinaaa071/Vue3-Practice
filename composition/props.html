@@ -4,7 +4,7 @@
 <!-- 🔥🔥練習開始🔥🔥 -->
 
 <div id="app">
-  <card></card>
+  <card :item="person" num="1"></card>
 </div>
 <script type="module">
 // import { createApp } from '...';
@@ -13,11 +13,30 @@ const { createApp, ref, toRef } = Vue;
 const card = {
   template: `<div class="card" style="width: 18rem;">
     <div class="card-body">
-      <h5 class="card-title"></h5>
+      <h5 class="card-title">{{ item.name }}</h5>
+      {{ num }}
+      <br>
+      {{ name }}
+      <input type="text" v-model="name">
     </div>
   </div>`,
-  setup() {
+  props: ['item', 'num'],
+  setup(props) {
+    console.log(props);
+    // 解構，取出特定參數
+    // 可傳多個參數
+    const { item, num } = props;
 
+    // 第二次取出會失去雙向綁定特性
+    // const { name } = item
+    // 使內層之值也具有雙向綁定特性需寫為以下
+    const name = ref(item.name);
+
+    return {
+      item,
+      num,
+      name
+    }
   }
 }
 

@@ -12,7 +12,7 @@
 
 </div>
 <script type="module">
-const { createApp, ref, reactive } = Vue;
+const { createApp, ref, reactive, watch } = Vue;
 
 const app = createApp({
 
@@ -21,7 +21,10 @@ const app = createApp({
     // 監聽純值
     const productName = ref('蛋餅');
     const watchText = ref('');
-
+    // watch 是等觸發變更後才會執行
+    // watch(productName, (newValue, oldValue) => {
+    //   watchText.value = `輸入的文字僅有 ${newValue.length} 個字，上一次有 ${oldValue.length} 個字`
+    // })
 
 
     // 監聽物件
@@ -35,7 +38,26 @@ const app = createApp({
       }
     });
     const watchText2 = ref('');
+    // watch(() => product.value.other.name, (newValue, oldValue) => {
+    //   watchText2.value = `輸入的文字僅有 ${newValue.length} 個字，上一次有 ${oldValue.length} 個字`
+    // })
 
+    // 深層監聽
+    // watch(product, (newValue, oldValue) => {
+    //   console.log(newValue, oldValue);
+    // }, { deep: true})
+
+    // 多值監聽
+    watch([productName, product], ([productNameVal, productVal], [productNamePre, productPre]) => {
+      console.log('純值',
+        productNameVal,
+        productNamePre
+      );
+      console.log('物件',
+        productVal,
+        productPre
+      );
+    }, { deep: true })
 
 
     return {

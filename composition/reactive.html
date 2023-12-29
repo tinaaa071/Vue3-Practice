@@ -5,14 +5,27 @@
 
 <div id="app">
   {{person}}
+  <input type="text" v-model="person.name">
 </div>
 <script type="module">
 // import { createApp } from '...';
-const { createApp } = Vue;
+const { createApp, reactive } = Vue;
 
 const app = createApp({
   setup() {
+    // 雙向綁定
+    // reactive 為 proxy 物件，必定是「物件」
+    // 若是傳入純值會出錯 reactive(1)
+    const person = reactive({
+      name: '貓咪'
+    })
+
+    // 修改值
+    person.name = '狗狗'
     
+    return {
+      person
+    }
   },
 });
 

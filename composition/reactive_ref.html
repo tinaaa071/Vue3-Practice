@@ -17,6 +17,12 @@ const app = createApp({
     const person2 = reactive({
       name: '卡斯伯',
     });
+
+    const name = ref('卡斯伯');
+    console.log(name, person);
+    // 必為物件、使用 Handler 控制
+    name.value;
+    person.value;
     
 
     return {

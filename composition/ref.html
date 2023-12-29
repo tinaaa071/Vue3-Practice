@@ -4,17 +4,48 @@
 <!-- 🔥🔥練習開始🔥🔥 -->
 
 <div id="app">
-  {{person}}
   <input type="text" v-model="num">
+  {{ num }}
+  <br>
+  <input type="text" v-model="person.name">
+  {{ person }}
 </div>
 <script type="module">
 // import { createApp } from '...';
-const { createApp } = Vue;
+const { createApp, ref } = Vue;
 
 const app = createApp({
   setup() {
-    
+    // ref 可定義純值變數
+    const num = ref(1);
+    console.log(num.value);
+
+    // 修改值
+    num.value = 5
+
+    // 使用 ref 定義物件
+    const person = ref({
+      name: '小明',
+      family: {
+        name: '小明家'
+      }
+    })
+
+    // 修改值
+    person.value.name = '小華'
+    person.value.family.name = '小華家'
+
+    // 替換值
+    person.value = {
+      name: '阿誠'
+    }
+
+    return {
+      num,
+      person
+    }
   },
+  
 });
 
 app.mount('#app')

@@ -11,7 +11,7 @@
 
 </div>
 <script type="module">
-const { createApp, ref, reactive } = Vue;
+const { createApp, ref, reactive, watchEffect } = Vue;
 
 const app = createApp({
 
@@ -28,6 +28,19 @@ const app = createApp({
     });
 
     const watchText = ref('');
+
+    let num = 0;
+    const stopWatchEffect = watchEffect(() => {
+      // console.log('1', productName.value);
+      // console.log('2', product.value.name);
+
+      watchText.value = `媽媽買了 ${product.value.name}`;
+      num++;
+      console.log(num);
+      if (num === 10) {
+        stopWatchEffect();
+      }
+    })
 
 
     return {

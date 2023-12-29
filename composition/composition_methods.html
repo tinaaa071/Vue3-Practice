@@ -5,8 +5,9 @@
 
 <div id="app">
   {{ num }}
-  <button type="button">累加</button>
-  <button type="button">取得累加次數</button>
+  <!-- 累加 5 -->
+  <button type="button" @click="add(5)">累加</button>
+  <button type="button" @click="getCount">取得累加次數</button>
 </div>
 <script type="module">
 const { createApp, ref } = Vue;
@@ -15,8 +16,29 @@ const app = createApp({
   setup() {
     const num = ref(1);
 
+    // 累加次數
+    // 不需匯出的值（e.g. 系統參數、API 路徑
+    let countAdd = 0;
+
+    // 定義方法
+    // function add(n) {
+    //   num.value += n
+    // }
+    // 使用箭頭函式
+    const add = (n) => {
+      num.value += n;
+      countAdd++;
+    }
+
+    // 取得累加次數
+    const getCount = () => {
+      console.log(countAdd);
+    }
+
     return {
       num,
+      add,
+      getCount
     }
   },
 });

@@ -7,29 +7,50 @@
   {{ person }}
   num:{{ num }}
   <button type="button" @click="add(10)">累加</button>
+  newValue: {{ newValue }}
+  num2: {{ num2 }}
 </div>
 <script type="module">
 // import { createApp } from '...';
-const { createApp, ref} = Vue;
+const { createApp, ref, onMounted, computed} = Vue;
 
 const app = createApp({
   setup() {
+    // 生命週期
+    // #1 https://v3.cn.vuejs.org/api/composition-api.html#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E9%92%A9%E5%AD%90
     const num = ref(1);
+    onMounted(() => {
+      // 調整 num 數值
+      num.value = 100;
+    })
+    const add = (n) => {
+      num.value += n;
+    }
+
     const person = ref({
       name: '小明',
       price: 0
     });
-    const add = (n) => {
-      num.value += n;
-    }
-    
-
-    // 生命週期
-    // #1 https://v3.cn.vuejs.org/api/composition-api.html#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E9%92%A9%E5%AD%90
-
+    onMounted(() => {
+      person.value = {
+        name: '小華'
+      }
+    })
 
     // computed
     // #2 https://v3.cn.vuejs.org/api/computed-watch-api.html#computed
+    const num2 = ref(0)
+    const newValue = computed( {
+      get() {
+        return num.value * 2
+      },
+      set(value) {
+        console.log(newValue);
+        num2.value = value;
+      }
+    })
+    // 當試圖寫入新值時，就會觸發 set
+    newValue.value = 1000;
 
 
     console.log(num)
@@ -38,6 +59,8 @@ const app = createApp({
       num,
       person,
       add,
+      newValue,
+      num2
     }
   },
 });

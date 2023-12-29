@@ -8,8 +8,9 @@
   <card ref="card"></card>
 </div>
 <script type="module">
-const { createApp, ref } = Vue;
+const { createApp, ref, onMounted } = Vue;
 
+// 卡片元件
 const card = {
   template: `<div class="card" style="width: 18rem;">
     <div class="card-body">
@@ -36,8 +37,21 @@ const app = createApp({
       name: '卡斯伯'
     });
 
+    // 宣告變數
+    // 名稱需與 ref="" 一致
+    // ref 定義資料，定義資料時先傳入 null 即可
+    const btn = ref(null);
+    const card = ref(null);
+
+    // 於生命週期取得 DOM 元素
+    onMounted(() => {
+      console.log(btn.value, card.value);
+    })
+
     return {
       person,
+      btn,
+      card
     }
   },
 });
