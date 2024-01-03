@@ -1,36 +1,52 @@
+// 加入 cartStore
+import cartStore from "../store/cartStore.js"
+// pinia 方法
+const { mapState, mapActions } = Pinia
+
 export default {
     template: `
     <div class="bg-light my-4 p-4">
-    <!-- v-if -->
-    <div>購物車沒有任何品項</div>
-    <!-- v-else -->
-        <table class="table align-middle">
+        <!-- v-if -->
+        <div v-if="!cartList.carts.length">購物車沒有任何品項</div>
+        <!-- v-else -->
+        <table v-else class="table align-middle">
             <!-- 品項 -->
             <tbody>
-                <tr>
+                <tr v-for="item in cartList.carts" :key="item.id">
                     <td>
-                        <a href="" class="text-dark text-decoration-none">x</a>
+                        <a href="" class="text-dark text-decoration-none"
+                        @click.prevent="removeCartItem(item.id)"
+                        >x</a>
                     </td>
                     <td>
-                        <img src="https://images.unsplash.com/photo-1682686581221-c126206d12f0?q=80&w=2670&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="table-image" alt="">
+                        <img :src="item.product.imageUrl" class="table-image" alt="">
                     </td>
-                    <td>好吃的餅乾</td>
+                    <td>{{ item.product.title }}</td>
                     <td>
-                        <select name="" id="" class="form-select">
-                            <option value="">1</option>
+                        <select name="" id="" class="form-select" :value="item.qty" @change="(evt) => setCartQty(item.id, evt)">
+                            <option :value="i" v-for="i in 20" :key="i">{{ i }}</option>
                         </select>
                     </td>
                     <td class="text-end">
-                        $900
+                        $ {{ item.subtotal }}
                     </td>
                 </tr>
             </tbody>
             <!-- 小計 -->
             <tfoot>
                 <tr>
-                    <td colspan="5" class="text-end">總金額 NT$ 900</td>
+                    <td colspan="5" class="text-end">總金額 NT$ {{ cartList.total }}</td>
                 </tr>
             </tfoot>
         </table>
-    </div>`
+    </div>`,
+    // state 資料
+    computed: {
+        // ['所有 getters 之名稱']
+        ...mapState(cartStore, ['cartList'])
+    },
+    // actions 方法
+    methods: {
+        ...mapActions(cartStore, ['removeCartItem', 'setCartQty'])
+    }
 }
